@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Master",
+  "version": "1.0",
+  "description": "A macOS-style new tab page with search and widgets.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": []
+}

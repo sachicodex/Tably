@@ -1,0 +1,303 @@
+/* ========== BASE RESET ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", "Roboto", "Ubuntu", sans-serif;
+  background-image: url("assets/img/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ========== CONTAINER ========== */
+.dashboard {
+  text-align: center;
+  z-index: 2;
+  width: 90%;
+  max-width: 900px;
+}
+
+.dashboard h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* Hero block (greeting + time/date) */
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.25rem;
+}
+.hero .meta {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+.hero .time {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.hero .date {
+  font-size: 1.05rem;
+  opacity: 0.9;
+}
+.hero .dot {
+  opacity: 0.5;
+}
+
+/* ========== SEARCH BAR ========== */
+.search-bar {
+  display: flex;
+  align-items: center;
+  border-radius: 1.25rem;
+  padding: 0.8rem 1rem;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  margin-inline: auto;
+  transition: border-color 0.7s ease, box-shadow 0.7s ease;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 5px 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+.search-bar:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+.search-bar:focus-within {
+  border-color: #e69451;
+  box-shadow: 0 0 0 2px #e69451, 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-bar .icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  opacity: 0.8;
+}
+
+.search-bar .mic {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #eeb485, #f0bf97);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 6px 16px #e99f62;
+  border: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.search-bar .mic:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px #5c3b20;
+}
+
+.search-bar .mic img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Quick Links Container */
+.quick-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+
+  /* refined glass style */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Card Base Style */
+.card {
+  position: relative;
+  width: 220px;
+  height: 130px;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  will-change: transform;
+}
+
+.card p {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 12px;
+}
+
+/* Frosted Glass Overlay */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.02);
+  z-index: 1;
+  transition: background 0.4s ease;
+}
+
+.card:hover::before {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.quick-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 2rem;
+}
+
+/* Card Container */
+.card {
+  position: relative;
+  width: 230px;
+  height: 140px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(11, 11, 15, 0.65);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.card p {
+  z-index: 2;
+  margin-bottom: 14px;
+}
+
+/* =============================
+   BRAND COLOR VARIANTS
+   ============================= */
+
+/* 🎥 YouTube - red/pink glow */
+.card.youtube {
+  background-image: url("assets/img/youtube.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card.chatgpt {
+  background-image: url("assets/img/chatgpt.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card.spotify {
+  background-image: url("assets/img/calendar.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ⚙ Hover effects */
+.card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 0 40px rgb(242, 173, 93, 0.6);
+}
+
+/* ========== DOCK ========== */
+.dock {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: 1.25rem;
+  padding: 1rem 1.5rem;
+
+  /* refined glass style */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.dock-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  will-change: transform;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dock-icon:hover {
+  transform: translateY(-8px) scale(1.1);
+  cursor: pointer;
+  background: snow;
+}
+
+.dock-icon img {
+  width: 35px;
+  height: auto;
+}
+
+.white {
+  background: ghostwhite;
+}
