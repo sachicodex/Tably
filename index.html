@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab Master Dashboard</title>
+    
+    <style>
+      /* Ensure body is styled for full screen immediately and stays dark */
+      body {
+        background-color: #0B0B0F; /* Dark background to cover initial render */
+        overflow: hidden; /* Prevent scrolling during load */
+      }
+      /* Ensure the preloader covers the whole screen instantly */
+      .preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #0B0B0F;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      /* NEW: Hide the image layer initially, placed under preloader */
+      .background-fade-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1; /* Below the preloader (9999) and below the dashboard (implied z-index 2+) */
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out; /* Fades in over 1 second, matching dashboard */
+      }
+      .background-fade-layer.loaded {
+        opacity: 1;
+        z-index: -1;
+      }
+    </style>
+
+    <script src="tailwind.js"></script>
+    <script type="module">
+      // Kept this block for structural integrity, though icons are not used directly
+      import { Search, Mic, Youtube, Zap, Calendar, CheckCircle, Folder, Mail, Lock, Globe, Github } from 'https://unpkg.com/lucide@latest/dist/esm/lucide.js?module';
+
+      const icons = {
+        Search, Mic, Youtube, Zap, Calendar, CheckCircle, Folder, Mail, Lock, Globe, Github
+      };
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="loading.css">
+</head>
+<body>
+
+    <div class="background-fade-layer"></div>
+
+    <div class="preloader">
+<svg class="logo" viewBox="-3 0 262 262" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid"><path d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" fill="#4285F4"/><path d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" fill="#34A853"/><path d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782" fill="#FBBC05"/><path d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" fill="#EB4335"/></svg>
+    </div>
+
+<div class="dashboard-container">
+    <main class="dashboard p-8 max-w-4xl w-full flex flex-col items-center">
+
+        <section class="search w-full max-w-4xl mb-4" aria-label="Search the web">
+            <div class="search-bar glass-element flex items-center p-3 rounded-2xl w-full">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 opacity-70 mr-3 search-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+
+                <input id="searchInput" type="text" placeholder="Search the web..." autocomplete="off" aria-label="Search" class="flex-1 bg-transparent text-lg border-none focus:ring-0 outline-none placeholder-white/70" />
+
+                <button id="micButton" class="w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 transition-colors ml-3 grid place-items-center" title="Voice search" aria-label="Voice search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                </button>
+                
+                <button id="geminiModeToggle" class="w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 transition-colors ml-2 grid place-items-center text-xl" title="Toggle Gemini Q&A Mode" aria-label="Toggle Gemini Q&A Mode">
+                    ✨
+                </button>
+            </div>
+        </section>
+        
+        <section id="geminiQaSection" class="w-full max-w-2xl mx-auto mb-12 hidden" aria-live="polite">
+            <div id="geminiResults" class="glass-element p-5 rounded-2xl text-sm leading-relaxed overflow-y-auto max-h-[50vh]">
+                </div>
+        </section>
+        
+        <div class="sizebox"></div>
+
+        <section class="quick-links w-full max-w-4xl mx-auto mb-4" aria-label="Quick Access Links">
+            <div class="glass-element p-4 rounded-3xl flex justify-center space-x-6">
+
+                <a href="https://www.youtube.com/" target="_self" class="quick-link-card youtube"></a>
+
+                <a href="https://chatgpt.com/" target="_self" class="quick-link-card chatgpt"></a>
+
+                <a href="https://calendar.google.com/" target="_self" class="quick-link-card calendar"></a>
+
+            </div>
+        </section>
+        
+        <div class="sizebox"></div>
+
+   <!-- Dock -->
+      <nav class="dock glass-element w-full max-w-4xl rounded-2xl" aria-label="Dock shortcuts">
+
+        <button class="dock-icon white" data-url="https://tasks.google.com">
+          <img src="assets/img/task.png" alt="Tasks" />
+        </button>
+
+        <button class="dock-icon white" data-url="https://keep.google.com/">
+           <img src="assets/img/keep.png" alt="Keep" />
+        </button>
+
+        <button class="dock-icon white" data-url="https://gmail.com/">
+          <img src="assets/img/gmail.png" alt="Gmail" />
+        </button>
+
+        <button class="dock-icon white" data-url="https://mega.nz/fm/Ms4DQCIJ/">
+          <img src="assets/img/mega.png" alt="Mega" />
+        </button>
+        
+        <button class="dock-icon white" data-url="https://translate.google.lk/?sl=si&tl=en&op=translate">
+          <img src="assets/img/translate.png" alt="Translate" />
+        </button>
+
+        <button class="dock-icon white" data-url="#">
+          <img src="assets/img/github.png" alt="GitHub" />
+        </button>
+
+      </nav>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+<script src="loading.js"></script>
+</body>
+</html>
