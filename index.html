@@ -51,11 +51,11 @@
 
           <input id="searchInput" type="text" placeholder="Search the web..." autocomplete="off" aria-label="Search" class="flex-1 bg-transparent text-lg border-none focus:ring-0 outline-none placeholder-white/70" />
 
-          <button id="micButton" class="w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 transition-colors ml-3 grid place-items-center" title="Voice search" aria-label="Voice search">
+          <button id="micButton" class="w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 transition-colors ml-3 grid place-items-center" aria-label="Voice search">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
           </button>
 
-          <button id="geminiModeToggle" class="w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 transition-colors ml-2 grid place-items-center text-xl" title="Toggle Gemini Q&A Mode" aria-label="Toggle Gemini Q&A Mode">
+          <button id="geminiModeToggle" class="w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 transition-colors ml-2 grid place-items-center text-xl" aria-label="Toggle Gemini Q&A Mode">
             ✨
           </button>
         </div>
@@ -65,22 +65,17 @@
         <div id="geminiResults" class="gemini-response glass-element p-5 rounded-2xl text-sm leading-relaxed overflow-y-auto max-h-[70vh]">
           <div id="aiLoadingIndicator" class="ai-loading-content hidden">
             <div class="ai-thinking">
-              <div class="ai-avatar">
-                <div class="ai-brain">
-                  <div class="neural-pulse"></div>
-                  <div class="neural-pulse delay-1"></div>
-                  <div class="neural-pulse delay-2"></div>
-                </div>
-              </div>
               <div class="ai-status">
-                <span class="ai-name">Gemini AI</span>
+                <span class="ai-name">Nova Studio</span>
                 <div class="typing-indicator">
                   <span class="typing-text">Thinking</span>
-                  <div class="typing-dots">
+                </div>
+                <div class="sizebox"></div>
+                <div class="sizebox"></div>
+                <div class="typing-dots">
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
-                  </div>
                 </div>
               </div>
             </div>
