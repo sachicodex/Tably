@@ -103,12 +103,12 @@ async function callGeminiAPI(query) {
 
   // 🎭 Random Thinking Texts with Emojis
   const thinkingMessages = [
-    "💭 Thinking deeply...",
-    "⚡ Gathering thoughts...",
-    "🤖 Crunching some ideas...",
-    "🧠 Processing info...",
-    "🔍 Searching my digital brain...",
-    "✨ Crafting something awesome..."
+    ">> Thinking deeply <<",
+    ">> Gathering thoughts <<",
+    ">> Crunching some ideas <<",
+    ">> Processing info <<",
+    ">> Searching my digital brain <<",
+    ">> Crafting something awesome <<"
   ];
   const typingText = document.querySelector('.typing-text');
   if (typingText) typingText.textContent = thinkingMessages[Math.floor(Math.random() * thinkingMessages.length)];
