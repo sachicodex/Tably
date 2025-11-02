@@ -230,3 +230,40 @@ document.addEventListener('keydown', (e) => {
     searchInput.focus();
   }
 });
+
+// 🧭 Dock navigation: open buttons by data-url
+const dock = document.querySelector('nav.dock');
+if (dock) {
+  dock.addEventListener('click', (e) => {
+    const button = e.target.closest('.dock-icon');
+    if (!button) return;
+    let url = button.getAttribute('data-url') || '';
+    // Default to GitHub homepage if placeholder '#'
+    if (!url || url === '#') url = 'https://github.com/';
+    window.open(url, '_self');
+  });
+}
+
+// 🚫 Disable image context menu and dragging
+function disableImageInteractions() {
+  document.querySelectorAll('img').forEach(img => {
+    img.setAttribute('draggable', 'false');
+  });
+}
+
+// Run once on load
+disableImageInteractions();
+
+// Block context menu on images only
+document.addEventListener('contextmenu', (e) => {
+  if (e.target && e.target.tagName === 'IMG') {
+    e.preventDefault();
+  }
+});
+
+// Block dragging of images
+document.addEventListener('dragstart', (e) => {
+  if (e.target && e.target.tagName === 'IMG') {
+    e.preventDefault();
+  }
+});
