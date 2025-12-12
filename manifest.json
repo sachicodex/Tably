@@ -1,8 +1,8 @@
 {
   "manifest_version": 4,
-  "name": "Tab Master",
-  "version": "1.0",
-  "description": "A macOS-style new tab page with search and widgets.",
+  "name": "Tably",
+  "version": "2.63.4",
+  "description": "Tably transforms your browser’s new tab into a sleek, macOS-inspired dashboard featuring a customizable search bar, productivity widgets, and quick-access tiles for your favorite web apps. ",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
