@@ -1,10 +1,18 @@
 {
-  "manifest_version": 4,
+  "manifest_version": 3,
   "name": "Tably",
   "version": "2.63.4",
   "description": "Tably transforms your browser’s new tab into a sleek, macOS-inspired dashboard featuring a customizable search bar, productivity widgets, and quick-access tiles for your favorite web apps. ",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": []
+  "permissions": [],
+  "icons": {
+    "16": "assets/img/logo/tably.png",
+    "48": "assets/img/logo/tably.png",
+    "128": "assets/img/logo/tably.png"
+  },
+  "action": {
+    "default_icon": "assets/img/logo/tably.png"
+  }
 }
