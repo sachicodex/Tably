@@ -1,137 +1,727 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>New Tab</title>
-  
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>New Tab</title>
+
     <!-- Light Mode Icon -->
-  <link
-    rel="icon"
-    type="image/png"
-    href="assets/favicon/tab-light.png"
-    media="(prefers-color-scheme: light)"
-  />
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/img/logo/tably.png"
+      media="(prefers-color-scheme: light)"
+    />
 
-  <!-- Dark Mode Icon -->
-  <link
-    rel="icon"
-    type="image/png"
-    href="assets/favicon/tab-dark.png"
-    media="(prefers-color-scheme: dark)"
-  />
+    <!-- Dark Mode Icon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/img/logo/tably.png"
+      media="(prefers-color-scheme: dark)"
+    />
 
+    <style>
+      body {
+        background-color: #0b0b0f;
+        overflow: hidden;
+      }
+      .preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #0b0b0f;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
 
-  <style>
-    body { background-color: #0B0B0F; overflow: hidden; }
-    .preloader {
-      position: fixed; top:0; left:0; width:100%; height:100%;
-      background-color:#0B0B0F; z-index:9999; display:flex;
-      flex-direction:column; justify-content:center; align-items:center;
-    }
-    .background-fade-layer {
-      position: fixed; top:0; left:0; width:100%; height:100%;
-      z-index:1; opacity:0; transition: opacity 0.8s ease-in-out;
-    }
-    .background-fade-layer.loaded { opacity:1; z-index:-1; }
-  </style>
+    <link rel="stylesheet" href="assets/css/loading.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div class="preloader">
+      <svg
+        class="logo"
+        viewBox="-3 0 262 262"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid"
+      >
+        <path
+          d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
+          fill="#4285F4"
+        />
+        <path
+          d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
+          fill="#34A853"
+        />
+        <path
+          d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"
+          fill="#FBBC05"
+        />
+        <path
+          d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
+          fill="#EB4335"
+        />
+      </svg>
+    </div>
 
-  <script src="assets/js/tailwind.js"></script>
-  <script type="module">
-    import { Search, Mic, Youtube, Zap, Calendar, CheckCircle, Folder, Mail, Lock, Globe, Github } from 'https://unpkg.com/lucide@latest/dist/esm/lucide.js?module';
-    const icons = { Search, Mic, Youtube, Zap, Calendar, CheckCircle, Folder, Mail, Lock, Globe, Github };
-  </script>
+    <!-- Sidebar Menu -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+    <aside id="sidebar" aria-hidden="true">
+      <div class="sidebar-panel">
+        <div id="settingsView" class="sidebar-view">
+          <div class="sidebar-header">
+            <h2 class="sidebar-title" style="font-size: 1.5rem">Settings</h2>
+            <button
+              class="sidebar-close-btn"
+              type="button"
+              aria-label="Close settings"
+            >
+              <span class="sidebar-toggle-icon" aria-hidden="true"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M2 11C2 7.22876 2 5.34315 3.17157 4.17157C4.34315 3 6.22876 3 10 3H14C17.7712 3 19.6569 3 20.8284 4.17157C22 5.34315 22 7.22876 22 11V13C22 16.7712 22 18.6569 20.8284 19.8284C19.6569 21 17.7712 21 14 21H10C6.22876 21 4.34315 21 3.17157 19.8284C2 18.6569 2 16.7712 2 13V11Z"
+                    ></path>
+                    <path d="M15 21L15 3" stroke-linecap="round"></path>
+                  </g>
+                </svg>
+              </span>
+            </button>
+          </div>
 
-  <link rel="stylesheet" href="assets/css/loading.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-
-  <div class="background-fade-layer"></div>
-
-  <div class="preloader">
-    <!-- preloader SVG -->
-    <svg class="logo" viewBox="-3 0 262 262" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
-      <!-- svg paths omitted for brevity in this snippet, keep what you had -->
-      <path d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" fill="#4285F4"/>
-      <path d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" fill="#34A853"/>
-      <path d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782" fill="#FBBC05"/>
-      <path d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" fill="#EB4335"/>
-    </svg>
-  </div>
-
-  <div class="dashboard-container">
-    <main class="dashboard p-8 max-w-4xl w-full flex flex-col items-center">
-      <section class="search w-full max-w-4xl mb-4" aria-label="Search the web">
-        <div class="search-bar glass-element flex items-center p-3 rounded-2xl w-full">
-          <svg class="w-5 h-5 opacity-70 mr-3 search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-
-          <input id="searchInput" type="text" placeholder="Search the web..." autocomplete="off" aria-label="Search" class="flex-1 bg-transparent text-lg border-none focus:ring-0 outline-none placeholder-white/70" />
-
-          <button id="micButton" class="w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 transition-colors ml-3 grid place-items-center" aria-label="Voice search">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-          </button>
-
-          <button id="geminiModeToggle" class="w-8 h-8 rounded-full bg-white/30 hover:bg-white/50 transition-colors ml-2 grid place-items-center text-xl" aria-label="Toggle Gemini Q&A Mode">
-            ✨
-          </button>
-        </div>
-      </section>
-
-      <section id="geminiQaSection" class="w-full max-w-4xl mx-auto mb-8 hidden" aria-live="polite">
-        <div id="geminiResults" class="gemini-response glass-element p-5 rounded-2xl text-sm leading-relaxed overflow-y-auto max-h-[70vh]">
-          <div id="aiLoadingIndicator" class="ai-loading-content hidden">
-            <div class="ai-thinking">
-              <div class="ai-status">
-                <span class="ai-name">Nova Studio</span>
-                <div class="typing-indicator">
-                  <span class="typing-text">Thinking</span>
-                </div>
-                <div class="sizebox"></div>
-                <div class="sizebox"></div>
-                <div class="typing-dots">
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
+          <div class="sidebar-setting">
+            <div>
+              <div class="sidebar-setting-label">Layout Controls</div>
+              <div class="sidebar-setting-note">
+                Choose which sections appear on your dashboard
               </div>
             </div>
+            <button
+              id="openCustomizeBtn"
+              class="sidebar-action-btn"
+              type="button"
+            >
+              Manage
+            </button>
           </div>
-          <div id="geminiContent" class="gemini-content"></div>
+
+          <div class="sidebar-setting">
+            <div>
+              <div class="sidebar-setting-label">Personalization</div>
+              <div class="sidebar-setting-note">
+                Set your own background and visual preferences
+              </div>
+            </div>
+            <button
+              id="openCustomize02Btn"
+              class="sidebar-action-btn"
+              type="button"
+            >
+              Adjust
+            </button>
+          </div>
+
+          <div class="sidebar-setting">
+            <div>
+              <div class="sidebar-setting-label">Privacy Lock</div>
+              <div class="sidebar-setting-note">
+                Protect your new tab with a password
+              </div>
+            </div>
+            <button
+              id="openLockSetupBtn"
+              class="sidebar-action-btn"
+              type="button"
+            >
+              Set Up
+            </button>
+          </div>
+
+          <div class="sidebar-setting">
+            <div>
+              <div class="sidebar-setting-label">Force Dark Pages</div>
+              <div class="sidebar-setting-note">
+                Uses a Chrome flag and requires manual activation
+              </div>
+            </div>
+            <button
+              id="openDarkFlagBtn"
+              class="sidebar-action-btn"
+              type="button"
+            >
+              Enable
+            </button>
+          </div>
+          <div id="darkFlagStatus" class="sidebar-setting-status"></div>
+
+          <div class="sidebar-about" aria-label="Extension details">
+            <div class="sidebar-about-item">
+              <span class="sidebar-about-label">DEVELOPER</span>
+              <span class="sidebar-about-value">Sachintha Lakshan</span>
+            </div>
+            <div class="sidebar-about-item">
+              <span class="sidebar-about-label">PRODUCT</span>
+              <span class="sidebar-about-value">TABLY</span>
+            </div>
+            <div class="sidebar-about-item">
+              <span class="sidebar-about-label">VERSION</span>
+              <span class="sidebar-about-value">3.17.6</span>
+            </div>
+          </div>
         </div>
-      </section>
 
-      <div class="sizebox"></div>
+        <div id="customizeView" class="sidebar-view is-hidden">
+          <div class="sidebar-header">
+            <div class="sidebar-header-left">
+              <button
+                id="backToSettingsBtn"
+                class="sidebar-back-icon-btn"
+                type="button"
+                aria-label="Back to settings"
+              >
+                ❮
+              </button>
+              <h2 class="sidebar-title">Layout Controls</h2>
+            </div>
+            <button
+              class="sidebar-close-btn"
+              type="button"
+              aria-label="Close settings"
+            >
+              <span class="sidebar-toggle-icon" aria-hidden="true"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M2 11C2 7.22876 2 5.34315 3.17157 4.17157C4.34315 3 6.22876 3 10 3H14C17.7712 3 19.6569 3 20.8284 4.17157C22 5.34315 22 7.22876 22 11V13C22 16.7712 22 18.6569 20.8284 19.8284C19.6569 21 17.7712 21 14 21H10C6.22876 21 4.34315 21 3.17157 19.8284C2 18.6569 2 16.7712 2 13V11Z"
+                    ></path>
+                    <path d="M15 21L15 3" stroke-linecap="round"></path>
+                  </g>
+                </svg>
+              </span>
+            </button>
+          </div>
 
-      <section class="quick-links w-full max-w-4xl mx-auto mb-4" aria-label="Quick Access Links">
-        <div class="glass-element p-4 rounded-3xl flex justify-center space-x-6">
-          <a href="https://www.youtube.com/" target="_self" class="quick-link-card youtube"></a>
-          <a href="https://chatgpt.com/g/g-p-69072dbaa8008191bed2618744925243-temporary-chats/project" target="_self" class="quick-link-card chatgpt"></a>
-          <a href="https://calendar.google.com/" target="_self" class="quick-link-card calendar"></a>
+          <div class="sidebar-setting">
+            <span class="sidebar-setting-label">Week Day</span>
+            <label class="switch" for="toggleWeekday">
+              <input type="checkbox" id="toggleWeekday" />
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="sidebar-setting">
+            <span class="sidebar-setting-label">Time</span>
+            <label class="switch" for="toggleTime">
+              <input type="checkbox" id="toggleTime" />
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="sidebar-setting">
+            <span class="sidebar-setting-label">Search Bar</span>
+            <label class="switch" for="toggleSearchBar">
+              <input type="checkbox" id="toggleSearchBar" />
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="sidebar-setting">
+            <span class="sidebar-setting-label">Quick Links Tab</span>
+            <label class="switch" for="toggleQuickLinks">
+              <input type="checkbox" id="toggleQuickLinks" />
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="sidebar-setting">
+            <span class="sidebar-setting-label">Dock Tab</span>
+            <label class="switch" for="toggleDock">
+              <input type="checkbox" id="toggleDock" />
+              <span class="switch-slider"></span>
+            </label>
+          </div>
         </div>
-      </section>
 
-      <div class="sizebox"></div>
+        <div id="customize02View" class="sidebar-view is-hidden">
+          <div class="sidebar-header">
+            <div class="sidebar-header-left">
+              <button
+                id="backToSettingsFromBgBtn"
+                class="sidebar-back-icon-btn"
+                type="button"
+                aria-label="Back to settings"
+              >
+                ❮
+              </button>
+              <h2 class="sidebar-title">Personalization</h2>
+            </div>
+            <button
+              class="sidebar-close-btn"
+              type="button"
+              aria-label="Close settings"
+            >
+              <span class="sidebar-toggle-icon" aria-hidden="true"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M2 11C2 7.22876 2 5.34315 3.17157 4.17157C4.34315 3 6.22876 3 10 3H14C17.7712 3 19.6569 3 20.8284 4.17157C22 5.34315 22 7.22876 22 11V13C22 16.7712 22 18.6569 20.8284 19.8284C19.6569 21 17.7712 21 14 21H10C6.22876 21 4.34315 21 3.17157 19.8284C2 18.6569 2 16.7712 2 13V11Z"
+                    ></path>
+                    <path d="M15 21L15 3" stroke-linecap="round"></path>
+                  </g>
+                </svg>
+              </span>
+            </button>
+          </div>
 
-      <nav class="dock glass-element w-full max-w-4xl rounded-2xl" aria-label="Dock shortcuts">
-        <button class="dock-icon white" data-url="https://tasks.google.com"><img src="assets/img/icon/task.png" alt="Tasks" /></button>
-        <button class="dock-icon white" data-url="https://keep.google.com/"><img src="assets/img/icon/keep.png" alt="Keep" /></button>
-        <button class="dock-icon white" data-url="https://gmail.com/"><img src="assets/img/icon/gmail.png" alt="Gmail" /></button>
-        <button class="dock-icon white" data-url="https://mega.nz/fm/Ms4DQCIJ/"><img src="assets/img/icon/mega.png" alt="Mega" /></button>
-        <button class="dock-icon white" data-url="https://translate.google.lk/?sl=si&tl=en&op=translate"><img src="assets/img/icon/translate.png" alt="Translate" /></button>
-        <button class="dock-icon white" data-url="#"><img src="assets/img/icon/github.png" alt="GitHub" /></button>
-      </nav>
+          <section
+            class="customization-group"
+            aria-label="Background customization"
+          >
+            <div class="customization-group-header">
+              <h3 class="customization-title">Background</h3>
+              <p class="customization-subtitle">
+                Choose the page background image.
+              </p>
+            </div>
+            <div class="sidebar-setting customization-setting">
+              <div class="customization-setting-main">
+                <div class="customization-setting-title">Image File</div>
+                <div class="customization-setting-note">JPG, PNG, WEBP</div>
+              </div>
+              <button
+                id="openBgPickerBtn"
+                class="sidebar-action-btn"
+                type="button"
+              >
+                Pick Image
+              </button>
+            </div>
+            <div id="bgImageStatus" class="sidebar-setting-status"></div>
+          </section>
 
-    </main>
-  </div>
+          <input
+            id="bgImageInput"
+            class="hidden-file-input"
+            type="file"
+            accept="image/*"
+          />
 
-  <!-- MARKDOWN + HIGHLIGHT lib must be loaded BEFORE script.js -->
-  <script src="assets/js/loading.js"></script>
-  <script src="assets/js/script.js"></script>
+          <section
+            class="customization-group"
+            aria-label="Quick links customization"
+          >
+            <div class="customization-group-header">
+              <h3 class="customization-title">Quick Links</h3>
+              <p class="customization-subtitle">
+                Edit each card, then press Save Quick Links.
+              </p>
+            </div>
+            <div id="quickLinksEditor" class="customization-editor-list"></div>
+            <div class="customization-actions">
+              <button
+                id="saveQuickLinksBtn"
+                class="sidebar-primary-btn"
+                type="button"
+              >
+                Save Quick Links
+              </button>
+              <button
+                id="resetQuickLinksBtn"
+                class="sidebar-action-btn"
+                type="button"
+              >
+                Reset
+              </button>
+            </div>
+            <div id="quickLinksStatus" class="sidebar-setting-status"></div>
+          </section>
 
-  <script src="model/marked.js"></script>
-  <script src="model/highlight.js"></script>
-  <link rel="stylesheet" href="model/github-dark.css" />
+          <section class="customization-group" aria-label="Dock customization">
+            <div class="customization-group-header">
+              <h3 class="customization-title">Dock</h3>
+              <p class="customization-subtitle">
+                Edit each icon, then press Save Dock.
+              </p>
+            </div>
+            <div id="dockEditor" class="customization-editor-list"></div>
+            <div class="customization-toolbar">
+              <button
+                id="addDockItemBtn"
+                class="sidebar-action-btn"
+                type="button"
+              >
+                + Add Dock
+              </button>
+            </div>
+            <div class="customization-actions">
+              <button
+                id="saveDockBtn"
+                class="sidebar-primary-btn"
+                type="button"
+              >
+                Save Dock
+              </button>
+              <button
+                id="resetDockBtn"
+                class="sidebar-action-btn"
+                type="button"
+              >
+                Reset
+              </button>
+            </div>
+            <div id="dockStatus" class="sidebar-setting-status"></div>
+          </section>
+        </div>
 
-</body>
+        <div id="lockSetupView" class="sidebar-view is-hidden">
+          <div class="sidebar-header">
+            <div class="sidebar-header-left">
+              <button
+                id="backToSettingsFromLockBtn"
+                class="sidebar-back-icon-btn"
+                type="button"
+                aria-label="Back to settings"
+              >
+                ❮
+              </button>
+              <h2 class="sidebar-title">Privacy Lock</h2>
+            </div>
+            <button
+              class="sidebar-close-btn"
+              type="button"
+              aria-label="Close settings"
+            >
+              <span class="sidebar-toggle-icon" aria-hidden="true"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M2 11C2 7.22876 2 5.34315 3.17157 4.17157C4.34315 3 6.22876 3 10 3H14C17.7712 3 19.6569 3 20.8284 4.17157C22 5.34315 22 7.22876 22 11V13C22 16.7712 22 18.6569 20.8284 19.8284C19.6569 21 17.7712 21 14 21H10C6.22876 21 4.34315 21 3.17157 19.8284C2 18.6569 2 16.7712 2 13V11Z"
+                    ></path>
+                    <path d="M15 21L15 3" stroke-linecap="round"></path>
+                  </g>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <section
+            class="sidebar-setting lock-setup-card"
+            aria-label="Browser lock"
+          >
+            <div class="lock-setup-row">
+              <div class="lock-setup-copy">
+                <div class="sidebar-setting-label">Enable Browser Lock</div>
+                <div class="sidebar-setting-note">
+                  Ask password when browser starts
+                </div>
+              </div>
+              <label class="switch" for="lockEnabledToggle">
+                <input type="checkbox" id="lockEnabledToggle" />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div
+              class="sidebar-setting sidebar-setting-column lock-password-shell"
+            >
+              <label class="sidebar-setting-label" for="lockPasswordSetupInput">
+                Lock Password
+              </label>
+              <input
+                id="lockPasswordSetupInput"
+                class="sidebar-input"
+                type="password"
+                placeholder="Enter password"
+                autocomplete="new-password"
+              />
+            </div>
+          </section>
+
+          <div class="sidebar-setting">
+            <div>
+              <div class="sidebar-setting-label">Alt+Enter Bypass</div>
+              <div class="sidebar-setting-note">
+                Allow Alt+Enter to bypass lock screen
+              </div>
+            </div>
+            <label class="switch" for="lockAltEnterBypassToggle">
+              <input type="checkbox" id="lockAltEnterBypassToggle" />
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <button
+            id="saveLockSetupBtn"
+            class="sidebar-primary-btn"
+            type="button"
+          >
+            Save
+          </button>
+          <div id="lockSetupStatus" class="sidebar-setting-status"></div>
+        </div>
+      </div>
+    </aside>
+    <button
+      id="sidebar-open-btn"
+      class="sidebar-open-btn glass-element"
+      type="button"
+      aria-label="Open settings"
+    >
+      <span class="sidebar-toggle-icon" aria-hidden="true"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M2 11C2 7.22876 2 5.34315 3.17157 4.17157C4.34315 3 6.22876 3 10 3H14C17.7712 3 19.6569 3 20.8284 4.17157C22 5.34315 22 7.22876 22 11V13C22 16.7712 22 18.6569 20.8284 19.8284C19.6569 21 17.7712 21 14 21H10C6.22876 21 4.34315 21 3.17157 19.8284C2 18.6569 2 16.7712 2 13V11Z"
+            ></path>
+            <path d="M15 21L15 3" stroke-linecap="round"></path>
+          </g>
+        </svg>
+      </span>
+    </button>
+
+    <!-- Main Content -->
+
+    <div class="dashboard-container">
+      <main class="dashboard">
+        <section
+          id="clockBlock"
+          class="clock-block"
+          aria-label="Current date and time"
+        >
+          <div id="weekdayText" class="weekday-text"></div>
+          <div id="clockText" class="clock-text"></div>
+        </section>
+
+        <section id="searchSection" class="search" aria-label="Search the web">
+          <div class="search-bar glass-element">
+            <svg
+              class="search-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Search the web..."
+              autocomplete="off"
+              aria-label="Search"
+              class="search-input"
+            />
+
+            <button id="micButton" class="mic-button" aria-label="Voice search">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"
+                />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="22" />
+              </svg>
+            </button>
+          </div>
+          <div
+            id="searchSuggestions"
+            class="search-suggestions is-hidden"
+            role="listbox"
+            aria-label="Search suggestions"
+          ></div>
+        </section>
+
+        <div class="sizebox"></div>
+
+        <section
+          id="quickLinksSection"
+          class="quick-links"
+          aria-label="Quick Access Links"
+        >
+          <div class="quick-links-inner glass-element">
+            <a
+              href="https://www.youtube.com/"
+              target="_self"
+              class="quick-link-card youtube"
+              data-quick-index="0"
+              data-default-url="https://www.youtube.com/"
+              data-default-image="assets/img/ui/youtube.png"
+              aria-label="Quick link 1"
+            ></a>
+            <a
+              href="https://chatgpt.com/"
+              target="_self"
+              class="quick-link-card chatgpt"
+              data-quick-index="1"
+              data-default-url="https://chatgpt.com/"
+              data-default-image="assets/img/ui/chatgpt.png"
+              aria-label="Quick link 2"
+            ></a>
+            <a
+              href="https://calendar.google.com/"
+              target="_self"
+              class="quick-link-card calendar"
+              data-quick-index="2"
+              data-default-url="https://calendar.google.com/"
+              data-default-image="assets/img/ui/calendar.png"
+              aria-label="Quick link 3"
+            ></a>
+          </div>
+        </section>
+
+        <div class="sizebox"></div>
+
+        <nav
+          id="dockSection"
+          class="dock glass-element"
+          aria-label="Dock shortcuts"
+        >
+          <button
+            class="dock-icon white"
+            data-dock-index="0"
+            data-url="https://tasks.google.com"
+            data-default-url="https://tasks.google.com"
+          >
+            <img
+              src="assets/img/icon/task.png"
+              data-default-image="assets/img/icon/task.png"
+              alt="Tasks"
+            />
+          </button>
+          <button
+            class="dock-icon white"
+            data-dock-index="1"
+            data-url="https://keep.google.com/"
+            data-default-url="https://keep.google.com/"
+          >
+            <img
+              src="assets/img/icon/keep.png"
+              data-default-image="assets/img/icon/keep.png"
+              alt="Keep"
+            />
+          </button>
+          <button
+            class="dock-icon white"
+            data-dock-index="2"
+            data-url="https://gmail.com/"
+            data-default-url="https://gmail.com/"
+          >
+            <img
+              src="assets/img/icon/gmail.png"
+              data-default-image="assets/img/icon/gmail.png"
+              alt="Gmail"
+            />
+          </button>
+          <button
+            class="dock-icon white"
+            data-dock-index="3"
+            data-url="https://mega.nz/"
+            data-default-url="https://mega.nz/"
+          >
+            <img
+              src="assets/img/icon/mega.png"
+              data-default-image="assets/img/icon/mega.png"
+              alt="Mega"
+            />
+          </button>
+          <button
+            class="dock-icon white"
+            data-dock-index="4"
+            data-url="https://translate.google.com/"
+            data-default-url="https://translate.google.com/"
+          >
+            <img
+              src="assets/img/icon/translate.png"
+              data-default-image="assets/img/icon/translate.png"
+              alt="Translate"
+            />
+          </button>
+          <button
+            class="dock-icon white"
+            data-dock-index="5"
+            data-url="http://github.com/"
+            data-default-url="https://github.com/"
+          >
+            <img
+              src="assets/img/icon/github.png"
+              data-default-image="assets/img/icon/github.png"
+              alt="GitHub"
+            />
+          </button>
+        </nav>
+      </main>
+    </div>
+    <script src="assets/js/loading.js"></script>
+    <script src="assets/js/script.js"></script>
+  </body>
 </html>

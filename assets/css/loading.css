@@ -40,22 +40,3 @@
   visibility: hidden;
 }
 
-/* Main content styles */
-.main-content {
-  padding: 40px;
-  text-align: center;
-}
-
-.main-content h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #2d3748;
-}
-
-.main-content p {
-  font-size: 1.125rem;
-  color: #4a5568;
-  max-width: 600px;
-  margin: 1rem auto;
-  line-height: 1.6;
-}
