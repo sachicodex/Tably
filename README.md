@@ -94,4 +94,3 @@ Current version: **3.17.6**
 ## Support
 
 - Developer: **Sachintha Lakshan**
-- If this repository is on GitHub, add issue/release links here.
