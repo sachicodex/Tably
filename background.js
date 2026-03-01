@@ -1,5 +1,6 @@
-﻿const LOCK_REQUIRED_KEY = "tably_lock_required_once";
+const LOCK_REQUIRED_KEY = "tably_lock_required_once";
 const LOCK_ENABLED_KEY = "tably_lock_enabled";
+const LOCK_PENDING_URL_KEY = "tably_lock_pending_url";
 const ext = globalThis.browser ?? globalThis.chrome;
 const hasBrowserNamespace = typeof globalThis.browser !== "undefined";
 const LOCK_URL = ext.runtime.getURL("lock.html");
@@ -54,6 +55,45 @@ async function getLockRequired() {
 
 async function setLockRequired(required) {
   await invoke(ext.storage.local.set, ext.storage.local, { [LOCK_REQUIRED_KEY]: required });
+}
+
+function isPendingUrlCandidate(url) {
+  if (typeof url !== "string") return false;
+  const value = url.trim();
+  if (!value) return false;
+  if (value === LOCK_URL || value === EXT_NEWTAB_URL) return false;
+  if (newTabCandidates().includes(value)) return false;
+  if (value === "about:blank") return false;
+  return true;
+}
+
+async function setPendingUrl(url) {
+  if (!isPendingUrlCandidate(url)) return;
+  try {
+    await invoke(ext.storage.local.set, ext.storage.local, { [LOCK_PENDING_URL_KEY]: url });
+  } catch (_) {
+    // Ignore transient storage errors.
+  }
+}
+
+async function clearPendingUrl() {
+  try {
+    await invoke(ext.storage.local.remove, ext.storage.local, LOCK_PENDING_URL_KEY);
+  } catch (_) {
+    // Ignore transient storage errors.
+  }
+}
+
+async function takePendingUrl() {
+  try {
+    const data = await invoke(ext.storage.local.get, ext.storage.local, LOCK_PENDING_URL_KEY);
+    const pendingUrl = data[LOCK_PENDING_URL_KEY];
+    await clearPendingUrl();
+    if (isPendingUrlCandidate(pendingUrl)) return pendingUrl;
+  } catch (_) {
+    // Ignore storage failures and continue with default tab flow.
+  }
+  return null;
 }
 
 async function closeLockWindows() {
@@ -172,8 +212,14 @@ async function maximizeWindow(windowId) {
   }
 }
 
-async function openNormalBrowserWindow() {
-  for (const url of newTabCandidates()) {
+function buildOpenCandidates(preferredUrl) {
+  const defaults = newTabCandidates();
+  if (!isPendingUrlCandidate(preferredUrl)) return defaults;
+  return [preferredUrl, ...defaults];
+}
+
+async function openNormalBrowserWindow(preferredUrl = null) {
+  for (const url of buildOpenCandidates(preferredUrl)) {
     try {
       const created = await invoke(ext.windows.create, ext.windows, {
         url,
@@ -187,7 +233,7 @@ async function openNormalBrowserWindow() {
     }
   }
 
-  for (const url of newTabCandidates()) {
+  for (const url of buildOpenCandidates(preferredUrl)) {
     try {
       await invoke(ext.tabs.create, ext.tabs, { url });
       return true;
@@ -203,6 +249,7 @@ async function onSessionStart() {
   const enabled = await getLockEnabled();
   if (!enabled) {
     await setLockRequired(false);
+    await clearPendingUrl();
     await closeLockWindows();
     return;
   }
@@ -215,8 +262,9 @@ async function onSessionStart() {
 async function unlockAndResume() {
   isUnlocking = true;
   await setLockRequired(false);
+  const pendingUrl = await takePendingUrl();
 
-  await openNormalBrowserWindow();
+  await openNormalBrowserWindow(pendingUrl);
   await closeLockWindows();
 
   const normalWindows = await invoke(ext.windows.getAll, ext.windows, { windowTypes: ["normal"] });
@@ -239,6 +287,14 @@ ext.windows.onCreated.addListener(async (window) => {
 
   const required = await getLockRequired();
   if (!required) return;
+
+  try {
+    const tabs = await invoke(ext.tabs.query, ext.tabs, { windowId: window.id });
+    const firstTab = tabs[0];
+    await setPendingUrl((firstTab && (firstTab.pendingUrl || firstTab.url)) || "");
+  } catch (_) {
+    // Ignore missing tabs while window initializes.
+  }
 
   await ensureLockWindow();
   try {
@@ -279,6 +335,7 @@ ext.tabs.onUpdated.addListener(async (_tabId, changeInfo, tab) => {
   try {
     const win = await invoke(ext.windows.get, ext.windows, tab.windowId);
     if (win.type !== "normal") return;
+    await setPendingUrl(changeInfo.url || tab.pendingUrl || tab.url || "");
     await ensureLockWindow();
     await invoke(ext.windows.remove, ext.windows, win.id);
   } catch (_) {
@@ -295,6 +352,7 @@ if (ext.storage && ext.storage.onChanged) {
 
     if (!enabled) {
       await setLockRequired(false);
+      await clearPendingUrl();
       await closeLockWindows();
       return;
     }
